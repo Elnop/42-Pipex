@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 21:33:19 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/15 07:23:37 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/15 07:33:09 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	new_pipe(int pipe_fds[2])
 	}
 }
 
-void	reinit_params(t_fork_cmd_params *params, char *cmd_list[],
+void	update_params(t_fork_cmd_params *params, char *cmd_list[],
 	int pipe_fds[2], size_t i, size_t cmd_list_count)
 {
 	lp_bzero(params->dup_fds[0], 2 * sizeof(int));
@@ -86,7 +86,7 @@ void	pipe_while(int cmd_list_count, char *cmd_list[], char *envp[])
 	i = 0;
 	while (i < cmd_list_count)
 	{
-		reinit_params(&params, cmd_list, pipe_fds, i, cmd_list_count);
+		update_params(&params, cmd_list, pipe_fds, i, cmd_list_count);
 		fork_exec_cmd(params);
 		free_tab(params.cmd_args);
 		i++;
