@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/18 02:48:43 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/20 23:14:07 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/21 20:02:20 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_fork_cmd_params	init_params(char *envp[])
 	params.dup_fds = (int **)malloc(2 * sizeof(int *));
 	params.dup_fds[0] = (int *)malloc(2 * sizeof(int));
 	params.dup_fds[1] = (int *)malloc(2 * sizeof(int));
-
 	return (params);
 }
 

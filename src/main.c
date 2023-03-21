@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 21:33:19 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/21 19:28:38 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/21 20:01:52 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,20 +64,16 @@ int	here_doc(char *limiter)
 		line = get_next_line(0);
 		while (lp_strncmp(line, limiter, lp_strlen(line) - 1))
 		{
-			lp_putendl_fd(line, pipe_fds[1]);
+			lp_putstr_fd(line, pipe_fds[1]);
 			free(line);
 			line = get_next_line(0);
 		}
 		close(pipe_fds[1]);
 		(free(line), exit(0));
 	}
-	else
-	{
-		close(pipe_fds[1]);
-		wait(&cpid);
-		return (pipe_fds[0]);
-	}
-	return (-1);
+	close(pipe_fds[1]);
+	wait(&cpid);
+	return (pipe_fds[0]);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -85,13 +81,13 @@ int	main(int argc, char *argv[], char *envp[])
 	int		fd_in;
 	int		fd_out;
 
-	if ((argc-- && argv++) && argc < 4)
+	if (argc-- && argv++ && argc < 5)
 	{
 		lp_putendl_fd((char *)"Use exemple: ./pipex file1 cmd1 cmd2 file2\n", 2);
 		return (0);
 	}
 	if (!lp_strncmp(argv[0], "here_doc", 9) && argc-- && argv++)
-		fd_in = here_doc(*(argv + 1));
+		fd_in = here_doc(*(argv));
 	else
 		fd_in = open(argv[0], O_RDONLY);
 	if (fd_in == -1)
