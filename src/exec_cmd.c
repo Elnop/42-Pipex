@@ -6,50 +6,38 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 22:27:58 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/15 03:46:55 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/20 22:14:36 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-char	**get_paths(char *envp[])
+bool	exec_cmd(char *cmd_name, char **cmd_args, char *envp[])
 {
 	char	**paths;
 	size_t	i;
 
-	while (*envp)
+	if (!access(cmd_name, F_OK))
 	{
-		if (lp_strncmp(*envp, "PATH=", 5))
-		{
-			envp++;
-			continue ;
-		}
-		paths = lp_split(*envp + 5, ':');
-		i = 0;
-		while (paths[i])
-			lp_strcat(paths + i++, "/");
-		return (paths);
+		execve(cmd_name, cmd_args, envp);
+		return (true);
 	}
-	return (NULL);
-}
-
-bool	exec_cmd(char *cmd_name, char **cmd_args, char *envp[])
-{
-	char	**paths;
-
 	paths = get_paths(envp);
-	while (*paths)
+	if (!paths)
+		return (false);
+	i = 0;
+	while (paths[i])
 	{
-		if (!lp_strcat(paths, cmd_name))
-			return (false);
-		if (!access(*paths, F_OK))
-		{
-			execve(*paths, cmd_args, envp);
+		if (!lp_strcat(paths + i, cmd_name))
 			break ;
+		if (!access(paths[i], F_OK))
+		{
+			execve(paths[i], cmd_args, envp);
+			return (free_tab(paths), true);
 		}
-		paths++;
+		i++;
 	}
-	return (true);
+	return (free_tab(paths), false);
 }
 
 void	dup_fds(t_fork_cmd_params params)
@@ -70,25 +58,27 @@ void	close_fds(t_fork_cmd_params params)
 		close(params.close_fd);
 }
 
-void	fork_exec_cmd(t_fork_cmd_params params)
+int	fork_exec_cmd(t_fork_cmd_params params)
 {
 	int	cpid;
-	// int	status;
 
 	cpid = fork();
 	if (cpid == -1)
-	{
-		perror("fork error");
-		exit(EXIT_FAILURE);
-	}
+		return (-1);
 	else if (!cpid)
 	{
 		dup_fds(params);
 		close_fds(params);
-		exec_cmd(params.cmd_name, params.cmd_args, params.envp);
+		if (!exec_cmd(params.cmd_name, params.cmd_args, params.envp))
+			return (-1);
+		while (params.dup_fds_count--)
+			close(params.dup_fds[params.dup_fds_count][0]);
 		exit(0);
 	}
-	// else {
-	// 	waitpid(cpid, &status, 0);
-	// }
+	else
+	{
+		while (params.dup_fds_count--)
+			close(params.dup_fds[params.dup_fds_count][0]);
+		return (cpid);
+	}
 }

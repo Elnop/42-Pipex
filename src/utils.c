@@ -6,15 +6,51 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 22:26:38 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/11 06:34:41 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/20 21:58:23 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-bool	replace_std_fds(int in, int out)
+char	**get_paths(char *envp[])
 {
-	if (dup2(in, STDIN_FILENO) == -1 || dup2(out, STDOUT_FILENO) == -1)
-		return (false);
-	return (true);
+	char	**paths;
+	size_t	i;
+
+	while (*envp)
+	{
+		if (lp_strncmp(*envp, "PATH=", 5))
+		{
+			envp++;
+			continue ;
+		}
+		paths = lp_split(*envp + 5, ':');
+		i = 0;
+		while (paths[i])
+			lp_strcat(paths + i++, "/");
+		return (paths);
+	}
+	return (NULL);
+}
+
+void	free_tab(char **tab)
+{
+	char	**tmp;
+
+	tmp = tab;
+	while (*tab)
+	{
+		free(*tab);
+		tab++;
+	}
+	free(tmp);
+}
+
+void	new_pipe(int pipe_fds[2])
+{
+	if (pipe(pipe_fds) == -1)
+	{
+		perror("pipe");
+		exit(EXIT_FAILURE);
+	}
 }

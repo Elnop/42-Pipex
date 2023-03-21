@@ -6,13 +6,14 @@ CFLAGS = -Wall -Wextra -Werror -g3
 
 FILES = main \
 		exec_cmd \
+		pipe_while \
 		utils
 
 SRCS_DIR = src
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(addsuffix .c, $(FILES)))
 
-OBJS_DIR = obj
+OBJS_DIR = .build
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(FILES)))
 
@@ -32,13 +33,13 @@ $(NAME): $(LIBLP) $(OBJS_DIR) $(OBJS)
 	$(CC) $(OBJS) $(LIBLP) -o $(NAME)
 
 $(LIBLP):
-	make -C ${LIBLP_DIR}
+	@make -C ${LIBLP_DIR}
 
 $(OBJS_DIR):
-	mkdir -p $(OBJS_DIR)
+	@mkdir -p $(OBJS_DIR)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c $(INCLUDES)
-	$(CC) $(CFLAGS) -c $< -o $@ -I $(INCLUDES_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INCLUDES_DIR)
 
 all: $(NAME)
 
@@ -52,5 +53,7 @@ fclean: clean
 	rm -f $(NAME)
 
 re: clean all
+
+bonus: all
 
 .PHONY: all clean fclean re cleanlibs
