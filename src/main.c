@@ -81,7 +81,7 @@ int	main(int argc, char *argv[], char *envp[])
 	int		fd_in;
 	int		fd_out;
 
-	if (argc-- && argv++ && argc < 5)
+	if (argc-- && argv++ && argc < 4)
 	{
 		lp_putendl_fd((char *)"Use exemple: ./pipex file1 cmd1 cmd2 file2\n", 2);
 		return (0);
