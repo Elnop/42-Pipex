@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/26 21:34:42 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/20 21:46:11 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/25 21:41:44 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,16 @@ typedef struct s_fork_cmd_params {
 	int		close_fd;
 }	t_fork_cmd_params;
 
-int		fork_exec_cmd(t_fork_cmd_params params);
-void	free_tab(char **tab);
-void	new_pipe(int pipe_fds[2]);
-void	pipe_while(int cmds_count, char *cmds_names[], char *envp[]);
-char	**get_paths(char *envp[]);
+typedef struct s_fork_infos {
+	pid_t	pid;
+	int		*stat_loc;
+}	t_fork_infos;
+
+t_fork_infos		fork_exec_cmd(t_fork_cmd_params params);
+void				free_tab(char **tab);
+void				new_pipe(int pipe_fds[2]);
+void				pipe_while(int cmds_count, char *cmds_names[],
+						char *envp[]);
+char				**get_paths(char *envp[]);
 
 #endif

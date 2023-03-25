@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_cmd.c                                         :+:      :+:    :+:   */
+/*   fork_exec_cmd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 22:27:58 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/21 20:02:39 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/25 21:23:25 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ bool	exec_cmd(char *cmd_name, char **cmd_args, char *envp[])
 	size_t	i;
 
 	if (!access(cmd_name, F_OK))
-	{
 		execve(cmd_name, cmd_args, envp);
-		return (true);
-	}
 	paths = get_paths(envp);
 	if (!paths)
 		return (false);
@@ -31,10 +28,7 @@ bool	exec_cmd(char *cmd_name, char **cmd_args, char *envp[])
 		if (!lp_strcat(paths + i, cmd_name))
 			break ;
 		if (!access(paths[i], F_OK))
-		{
 			execve(paths[i], cmd_args, envp);
-			return (free_tab(paths), true);
-		}
 		i++;
 	}
 	return (free_tab(paths), false);
@@ -58,27 +52,24 @@ void	close_fds(t_fork_cmd_params params)
 		close(params.close_fd);
 }
 
-int	fork_exec_cmd(t_fork_cmd_params params)
+t_fork_infos	fork_exec_cmd(t_fork_cmd_params params)
 {
-	int	cpid;
+	t_fork_infos	fork_infos;
+	int				stat_loc;
 
-	cpid = fork();
-	if (cpid == -1)
-		return (-1);
-	else if (!cpid)
+	fork_infos.stat_loc = &stat_loc;
+	fork_infos.pid = fork();
+	if (!fork_infos.pid)
 	{
 		dup_fds(params);
 		close_fds(params);
-		if (!exec_cmd(params.cmd_name, params.cmd_args, params.envp))
-			return (-1);
-		while (params.dup_fds_count--)
-			close(params.dup_fds[params.dup_fds_count][0]);
+		exec_cmd(params.cmd_name, params.cmd_args, params.envp);
 		exit(0);
 	}
 	else
 	{
 		while (params.dup_fds_count--)
 			close(params.dup_fds[params.dup_fds_count][0]);
-		return (cpid);
+		return (fork_infos);
 	}
 }
