@@ -6,7 +6,7 @@
 /*   By: lperroti <lperroti@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 22:27:58 by lperroti          #+#    #+#             */
-/*   Updated: 2023/03/25 21:23:25 by lperroti         ###   ########.fr       */
+/*   Updated: 2023/03/28 21:15:40 by lperroti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,15 @@ bool	exec_cmd(char *cmd_name, char **cmd_args, char *envp[])
 
 void	dup_fds(t_fork_cmd_params params)
 {
-	size_t	i;
-
-	i = 0;
-	while (i < params.dup_fds_count)
+	if (params.fd_in != -1)
 	{
-		dup2(params.dup_fds[i][0], params.dup_fds[i][1]);
-		i++;
+		dup2(params.fd_in, STDIN_FILENO);
+		close(params.fd_in);
+	}
+	if (params.fd_out != -1)
+	{
+		dup2(params.fd_out, STDOUT_FILENO);
+		close(params.fd_out);
 	}
 }
 
@@ -67,9 +69,5 @@ t_fork_infos	fork_exec_cmd(t_fork_cmd_params params)
 		exit(0);
 	}
 	else
-	{
-		while (params.dup_fds_count--)
-			close(params.dup_fds[params.dup_fds_count][0]);
 		return (fork_infos);
-	}
 }

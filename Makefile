@@ -5,6 +5,8 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
 
 FILES = main \
+		check_cmds \
+		here_doc \
 		fork_exec_cmd \
 		pipe_while \
 		utils
