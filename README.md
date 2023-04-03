@@ -47,13 +47,23 @@ create infile
 touch infile
 ```
 
-Simple
+simple
 
 ```bash
 ./pipex infile "cat" "cat" outfile
 ```
 
-invalid cmds
+commands runs in parallel
+
+```bash
+./pipex infile "cat" "cat" "cat" "ls" outfile
+```
+
+```bash
+./pipex infile "yes" "yes" "yes" "head" outfile
+```
+
+invalid commands
 
 ```bash
 ./pipex infile "notexistingcmd" "cat" outfile
@@ -66,11 +76,10 @@ invalid cmds
 invalid files
 
 ```bash
-./pipex notexisting "cat" "cat" outfile
+./pipex notexist "cat" "cat" outfile
 ```
 
 ```bash
 chmod 000 infile
 ./pipex infile "cat" "cat" outfile
 ```
-
