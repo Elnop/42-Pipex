@@ -41,6 +41,8 @@ make
 
 ## Usage exemples
 
+### Mandatory & Multipipe
+
 create infile
 
 ```bash
@@ -56,7 +58,7 @@ simple
 commands runs in parallel
 
 ```bash
-./pipex infile "cat" "cat" "cat" "ls" outfile
+./pipex /dev/stdin "cat" "cat" "cat" "ls" /dev/stdout
 ```
 
 ```bash
@@ -83,3 +85,17 @@ invalid files
 chmod 000 infile
 ./pipex infile "cat" "cat" outfile
 ```
+
+random
+
+```bash
+./pipex /dev/random cat rev out
+```
+
+### Here Doc
+
+```bash
+./pipex here_doc STOP "cat -e" "cat -e" outfile
+```
+(we must append the new entry in the file)
+(test exit here doc with ctr+d)
