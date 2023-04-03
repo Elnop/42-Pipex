@@ -89,7 +89,7 @@ chmod 000 infile
 random
 
 ```bash
-./pipex /dev/random cat rev out
+./pipex /dev/random cat rev outfile
 ```
 
 ### Here Doc
