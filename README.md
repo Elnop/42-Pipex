@@ -98,4 +98,5 @@ random
 ./pipex here_doc STOP "cat -e" "cat -e" outfile
 ```
 (we must append the new entry in the file)
+
 (test exit here doc with ctr+d)
