@@ -105,7 +105,7 @@ valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-childre
 
 --trace-children valgrind-ise child processes
 
-⚠️ "trace-children" swow leaks in executed files
+⚠️ "trace-children" show leaks in executed files
 
 exemple: ls leak
 
