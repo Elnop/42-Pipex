@@ -92,6 +92,27 @@ random
 ./pipex /dev/random cat rev outfile
 ```
 
+## Valgrind
+```bash
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes ./pipex file1 cmd1 cmd2 file2
+```
+
+--leak-check                    -- search for memory leaks at exit
+
+--show-leak-kinds               -- specify leak kinds to show
+
+--track-fds                     -- track open file descriptors
+
+--trace-children                -- valgrind-ise child processes
+
+⚠️ "trace-children" swow leaks in executed files
+
+exemple: ls leak
+
+```bash
+valgrind --leak-check=full --show-leak-kinds=all --track-fds=yes --trace-children=yes ./pipex Makefile ls ls test
+```
+
 ### Here Doc
 
 ```bash
