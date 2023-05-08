@@ -62,34 +62,34 @@ commands runs in parallel
 ```
 
 ```bash
-./pipex infile "yes" "yes" "yes" "head" outfile
+./pipex [infile] "yes" "yes" "yes" "head" [outfile]
 ```
 
 invalid commands
 
 ```bash
-./pipex infile "notexistingcmd" "cat" outfile
+./pipex [infile] "notexistingcmd" "cat" [outfile]
 ```
 
 ```bash
-./pipex infile "" "cat" outfile
+./pipex [infile] "" "cat" [outfile]
 ```
 
 invalid files
 
 ```bash
-./pipex notexist "cat" "cat" outfile
+./pipex [notexist] "cat" "cat" [outfile]
 ```
 
 ```bash
 chmod 000 infile
-./pipex infile "cat" "cat" outfile
+./pipex [infile] "cat" "cat" [outfile]
 ```
 
 random
 
 ```bash
-./pipex /dev/random cat rev outfile
+./pipex /dev/random cat rev [outfile]
 ```
 
 ## Valgrind
